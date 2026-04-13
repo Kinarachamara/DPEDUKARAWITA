@@ -29,8 +29,8 @@
       left: 50%;
       transform: translate(-50%, -50%);
       opacity: 1;
-      transition: opacity 1.5s ease-in-out;  /* Smooth fade effect */
-      z-index: 9999;  /* Ensure title is on top */
+      transition: opacity 1.5s ease-in-out;
+      z-index: 9999;
     }
 
     .title img {
@@ -63,11 +63,11 @@
       width: 100%;
       height: auto;
       pointer-events: none;
-      opacity: 0;  /* Initially hidden */
-      transition: opacity 1.5s ease-in-out;  /* Smooth fade-in for overlays */
+      opacity: 0;
+      transition: opacity 1.5s ease-in-out;
     }
 
-    audio {
+    #backgroundAudio {
       display: none;
     }
 
@@ -87,7 +87,7 @@
 </head>
 <body>
 
-  <!-- Title with emoji image -->
+  <!-- Title -->
   <h2 id="title" class="title">
     <img src="lo.png" alt="Emoji">
     සදකිදුරු ජාතකය
@@ -98,7 +98,7 @@
   <div id="container">
     <img id="background" src="https://lh3.googleusercontent.com/pw/AP1GczPl9g2PqBWElguWyxgid-9d2N4k88TJEfG5jzIbQ-I5PwYJi5Uu0V-QmAJGm8JNFmgJVQEbTEk2Fq5VxP86CCBeBknp1ZkXceSc6Efh9zr_2tcPDG49LdgQEMwxTATx9LoIVKVfIQRLjZfahkBH1rUF=w773-h773-s-no-gm" alt="Background">
 
-    <!-- Initially hide the GIFs and images -->
+    <!-- Overlays -->
     <img class="overlay-gif" src="https://lh3.googleusercontent.com/pw/AP1GczOfd3mDctphTE8n01FYC89GO73_j-FaUI-2Puw91oweaa-JOvcpYj2plhh_rcjJx8d2ZE9BC331znD_Y6lUdGOJm4ypJXqwi0WXWpaHDiHMdBte1EdT59HkKsN3DiWtVjwstHoF6scnEOVs7atIiqQo=w773-h773-s-no-gm" alt="1 peththa">
     <img class="overlay-gif" src="1.png" alt="1 peththa"> 
     <img class="overlay-gif" src="2.png" alt="1 peththa"> 
@@ -112,35 +112,47 @@
     <img class="overlay-gif" src="https://lh3.googleusercontent.com/pw/AP1GczM3ViQH9zs9T8pYsqecZfleWXoQT84USRq4X7KJLdvcaIBuMkLborjJ5PFD-IkeF91zomMPKZ3nk6zghO2Vxppfhs0nWRm2NUWd-M60yQiuuPn3LwlZ3TmEFvhqcclm2KKNASKEWRrbcHeQsNuHARc8=w773-h773-s-no-gm" alt="final">
   </div>
 
+  <!-- Audio Element -->
+  <audio id="backgroundAudio" autoplay loop>
+    <source src="audio.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
   <script>
-    // Wait for 1 second after page load, then start the fade-out of the title
-    setTimeout(function() {
-      // Fade out the title
-      document.getElementById("title").style.opacity = "0";  // Fade out title
+    const audio = document.getElementById("backgroundAudio");
 
-      // After 1.5 seconds (to match the fade duration), hide title completely
-      setTimeout(function() {
-        document.getElementById("title").style.display = "none";  // Hide title completely
+    // Page load වෙනවා සමග audio play කිරීමට උත්සාහ කිරීම
+    window.addEventListener('load', () => {
+      // 1 second delay දාලා title fade කරනවා (ඔබේ original logic එකට අනුව)
+      setTimeout(() => {
+        document.getElementById("title").style.opacity = "0";
 
-        // Now fade in the GIFs and Canvas elements
-        const overlays = document.querySelectorAll('.overlay-gif');
-        overlays.forEach(function(overlay) {
-          overlay.style.opacity = '1';  // Fade in smoothly
-        });
+        setTimeout(() => {
+          document.getElementById("title").style.display = "none";
 
-        // After the GIFs are visible, bring the title back and fade in again
-        setTimeout(function() {
-          // Make title visible and position it back to its original place
-          document.getElementById("title").style.display = "flex";  // Show title again
-          document.getElementById("title").style.opacity = "1";  // Fade in the title
-          document.getElementById("title").style.position = "relative";  // Bring title back to its original position
-          document.getElementById("title").style.top = "10px";  // Move title upwards
-          document.getElementById("title").style.left = "auto";
-          document.getElementById("title").style.transform = "none";
-        }, 1000); // Delay before showing the title again
+          const overlays = document.querySelectorAll('.overlay-gif');
+          overlays.forEach(overlay => {
+            overlay.style.opacity = '1';
+          });
 
-      }, 1500); // Wait for the title fade to complete before showing the GIFs
-    }, 1000); // Wait 1 second before starting the fade effect
+          // Title ආපහු ගන්න
+          setTimeout(() => {
+            document.getElementById("title").style.display = "flex";
+            document.getElementById("title").style.opacity = "1";
+            document.getElementById("title").style.position = "relative";
+            document.getElementById("title").style.top = "10px";
+            document.getElementById("title").style.left = "auto";
+            document.getElementById("title").style.transform = "none";
+          }, 1000);
+
+          // Audio එකට force play (browser restrictions නිසා සමහර විට අවශ්‍ය වෙනවා)
+          audio.play().catch(err => {
+            console.log("Autoplay prevented by browser. User interaction needed.");
+          });
+
+        }, 1500);
+      }, 1000);
+    });
   </script>
 
 </body>
